@@ -2,12 +2,16 @@
 
 namespace UserApi\Api;
 
+use Cubex\Context\Context;
 use Cubex\Cubex;
+use UserApi\Controllers\AuthenticationController;
 use UserApi\Controllers\IndexController;
 use UserApi\Application as BaseApplication;
+use UserApi\Controllers\UserController;
 
 class Application extends BaseApplication
 {
+
 
   public function __construct(Cubex $cubex)
   {
@@ -21,14 +25,17 @@ class Application extends BaseApplication
         }
       }
     );
-
+    $this->setContext($cubex->getContext());
+    $this->_configureConnections();
   }
+
+
 
   protected function _generateRoutes()
   {
-    yield self::_route('/', IndexController::class);
+    yield self::_route('/user', UserController::class);
+    yield self::_route('/login', AuthenticationController::class);
 
-    //Let the parent application handle routes from here
     return parent::_generateRoutes();
   }
 
