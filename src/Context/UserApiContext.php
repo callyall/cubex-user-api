@@ -11,8 +11,6 @@ use UserApi\Cli\Application;
 class UserApiContext extends Context
 {
 
-  protected bool $_isAuthenticated = false;
-
   protected function _construct()
   {
     parent::_construct();
@@ -26,7 +24,10 @@ class UserApiContext extends Context
 
   }
 
-  protected function _initialize()
+  /**
+   * @return bool
+   */
+  public function isAuthenticated(): bool
   {
     $token = $this->request()->query->has('token') ? $this->request()->query->get('token') :
       $this->request()->headers->get('token');
@@ -36,19 +37,13 @@ class UserApiContext extends Context
       try
       {
         JWT::decode($token, $this->getConfig()->getSection('jwt')->getItem('key'), ['HS256']);
-        $this->_isAuthenticated = true;
+        return true;
       }
       catch(\Exception $e)
       {}
     }
-  }
 
-  /**
-   * @return bool
-   */
-  public function isAuthenticated(): bool
-  {
-    return $this->_isAuthenticated;
+    return false;
   }
 
 }

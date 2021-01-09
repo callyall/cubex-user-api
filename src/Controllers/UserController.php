@@ -2,9 +2,7 @@
 
 namespace UserApi\Controllers;
 
-use Cubex\Controller\Controller;
 use Generator;
-use Packaged\Context\Context;
 use Packaged\Dal\Exceptions\DataStore\DaoNotFoundException;
 use Packaged\Dal\Ql\QlDaoCollection;
 use Packaged\Http\Response;
@@ -16,7 +14,7 @@ use UserApi\Context\UserApiContext;
 use UserApi\Forms\UserForm;
 use UserApi\Models\User;
 
-class UserController extends Controller
+class UserController extends AuthenticatedController
 {
 
   protected function _generateRoutes(): Generator
@@ -105,28 +103,6 @@ class UserController extends Controller
   }
 
   /**
-   * @param UserApiContext $context
-   *
-   * @return Response
-   */
-  public function getUser(UserApiContext $context): Response
-  {
-    try
-    {
-      $user = User::loadById($context->routeData()->getInt('id'));
-      return Response::create($user, 200, ['Content-Type' => 'application/json']);
-    }
-    catch(DaoNotFoundException $e)
-    {
-      return Response::create(
-        json_encode(['error' => 'Resource not found!']),
-        404,
-        ['Content-Type' => 'application/json']
-      );
-    }
-  }
-
-  /**
    * @return Response
    */
   public function getIndex(): Response
@@ -168,6 +144,28 @@ class UserController extends Controller
     $user->save();
 
     return Response::create($user, 200, ['Content-Type' => 'application/json']);
+  }
+
+  /**
+   * @param UserApiContext $context
+   *
+   * @return Response
+   */
+  public function getUser(UserApiContext $context): Response
+  {
+    try
+    {
+      $user = User::loadById($context->routeData()->getInt('id'));
+      return Response::create($user, 200, ['Content-Type' => 'application/json']);
+    }
+    catch(DaoNotFoundException $e)
+    {
+      return Response::create(
+        json_encode(['error' => 'Resource not found!']),
+        404,
+        ['Content-Type' => 'application/json']
+      );
+    }
   }
 
   /**
@@ -255,28 +253,6 @@ class UserController extends Controller
         ['Content-Type' => 'application/json']
       );
     }
-  }
-
-  /**
-   * @param Context $c
-   *
-   * @return \Symfony\Component\HttpFoundation\Response
-   * @throws \Throwable
-   */
-  public function handle(Context $c): \Symfony\Component\HttpFoundation\Response
-  {
-    /**
-     * @var $c UserApiContext
-     */
-    if(!$c->isAuthenticated())
-    {
-      return Response::create(
-        json_encode(['error' => 'Not authenticated']),
-        403,
-        ['Content-Type' => 'application/json']
-      );
-    }
-    return parent::handle($c);
   }
 
 }
