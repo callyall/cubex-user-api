@@ -7,9 +7,9 @@ use Packaged\Context\Context;
 use Packaged\Dal\Exceptions\DataStore\DaoNotFoundException;
 use Packaged\Http\Responses\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use UserApi\Api\Controllers\AuthenticationController;
+use UserApi\Api\Controllers\UserController;
 use UserApi\Application as BaseApplication;
-use UserApi\Controllers\AuthenticationController;
-use UserApi\Controllers\UserController;
 
 class Application extends BaseApplication
 {

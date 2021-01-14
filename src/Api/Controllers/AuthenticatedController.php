@@ -1,6 +1,6 @@
 <?php
 
-namespace UserApi\Controllers;
+namespace UserApi\Api\Controllers;
 
 use Cubex\Controller\Controller;
 use Packaged\Context\Context;

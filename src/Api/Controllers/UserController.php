@@ -1,6 +1,6 @@
 <?php
 
-namespace UserApi\Controllers;
+namespace UserApi\Api\Controllers;
 
 use Generator;
 use Packaged\Dal\Exceptions\DataStore\DaoNotFoundException;

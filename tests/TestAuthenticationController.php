@@ -3,6 +3,7 @@
 use Cubex\Cubex;
 use Packaged\Http\Request;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 use UserApi\Api\Application;
 use UserApi\Context\UserApiContext;
 
@@ -16,7 +17,7 @@ class TestAuthenticationController extends TestCase
     $this->_app = new Application(Cubex::withCustomContext(UserApiContext::class, dirname(__DIR__), null, false));
   }
 
-  protected function _proccessRequest(Request $request)
+  protected function _proccessRequest(Request $request): Response
   {
     $context = new UserApiContext($request);
     $this->_app->getCubex()->prepareContext($context);
