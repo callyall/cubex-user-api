@@ -4,6 +4,7 @@ use Firebase\JWT\JWT;
 use Cubex\Cubex;
 use Packaged\Http\Request;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 use UserApi\Api\Application;
 use UserApi\Context\UserApiContext;
 
@@ -25,7 +26,7 @@ class TestUserController extends TestCase
     $this->_jwt = JWT::encode($payload, $jwtConfig['key']);
   }
 
-  protected function _proccessRequest(Request $request, $authenticated = false)
+  protected function _proccessRequest(Request $request, $authenticated = false): Response
   {
     if($authenticated)
     {

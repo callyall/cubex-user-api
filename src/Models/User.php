@@ -6,7 +6,7 @@ use \Packaged\Dal\Ql\QlDao;
 
 class User extends QlDao
 {
-  protected $_dataStoreName = 'user_api';
+  protected string $_dataStoreName = 'user_api';
 
   public int $id = 0;
   public string $first_name = '';

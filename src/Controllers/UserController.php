@@ -5,7 +5,7 @@ namespace UserApi\Controllers;
 use Generator;
 use Packaged\Dal\Exceptions\DataStore\DaoNotFoundException;
 use Packaged\Dal\Ql\QlDaoCollection;
-use Packaged\Http\Response;
+use Packaged\Http\Responses\JsonResponse;
 use Packaged\QueryBuilder\Expression\Like\ContainsExpression;
 use Packaged\QueryBuilder\Expression\ValueExpression;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
@@ -103,9 +103,9 @@ class UserController extends AuthenticatedController
   }
 
   /**
-   * @return Response
+   * @return JsonResponse
    */
-  public function getIndex(): Response
+  public function getIndex(): JsonResponse
   {
     try
     {
@@ -113,26 +113,24 @@ class UserController extends AuthenticatedController
     }
     catch(\Exception $e)
     {
-      return Response::create(
-        json_encode(['error' => 'Something went wrong!']),
-        500,
-        ['Content-Type' => 'application/json']
-      );
+      return JsonResponse::create(['error' => 'Something went wrong!'], 500);
     }
-    return Response::create($users, 200, ['Content-Type' => 'application/json']);
+    return JsonResponse::create($users);
   }
 
   /**
-   * @return Response
+   * @param UserApiContext $context
+   *
+   * @return JsonResponse
    */
-  public function postIndex(UserApiContext $context): Response
+  public function postIndex(UserApiContext $context): JsonResponse
   {
     $userForm = new UserForm();
     $errors = $userForm->hydrate(json_decode($context->request()->getContent(), true));
 
     if(!$userForm->isValid())
     {
-      return Response::create(json_encode(['errors' => $errors]), 400, ['Content-Type' => 'application/json']);
+      return JsonResponse::create(['errors' => $errors], 400);
     }
 
     $user = new User();
@@ -142,117 +140,72 @@ class UserController extends AuthenticatedController
     $user->dark_mode = $userForm->dark_mode->getValue() === 'true';
     $user->date_created = date('Y-m-d H:i:s', time());
     $user->save();
-
-    return Response::create($user, 200, ['Content-Type' => 'application/json']);
+    return JsonResponse::create($user);
   }
 
   /**
    * @param UserApiContext $context
    *
-   * @return Response
+   * @return JsonResponse
+   * @throws DaoNotFoundException
    */
-  public function getUser(UserApiContext $context): Response
+  public function getUser(UserApiContext $context): JsonResponse
   {
-    try
-    {
-      $user = User::loadById($context->routeData()->getInt('id'));
-      return Response::create($user, 200, ['Content-Type' => 'application/json']);
-    }
-    catch(DaoNotFoundException $e)
-    {
-      return Response::create(
-        json_encode(['error' => 'Resource not found!']),
-        404,
-        ['Content-Type' => 'application/json']
-      );
-    }
+    return JsonResponse::create(User::loadById($context->routeData()->getInt('id')));
   }
 
   /**
    * @param UserApiContext $context
    *
-   * @return Response
+   * @return JsonResponse
+   * @throws DaoNotFoundException
    */
-  public function deleteUser(UserApiContext $context): Response
+  public function deleteUser(UserApiContext $context): JsonResponse
   {
-    try
-    {
-      $user = User::loadById($context->routeData()->getInt('id'));
-      $user->delete();
-      return Response::create($user, 200, ['Content-Type' => 'application/json']);
-    }
-    catch(DaoNotFoundException $e)
-    {
-      return Response::create(
-        json_encode(['error' => 'Resource not found!']),
-        404,
-        ['Content-Type' => 'application/json']
-      );
-    }
+    $user = User::loadById($context->routeData()->getInt('id'));
+    $user->delete();
+    return JsonResponse::create($user);
   }
 
   /**
    * @param UserApiContext $context
    *
-   * @return Response
+   * @return JsonResponse
+   * @throws DaoNotFoundException
    */
-  public function patchName(UserApiContext $context): Response
+  public function patchName(UserApiContext $context): JsonResponse
   {
-    try
+    $user = User::loadById($context->routeData()->getInt('id'));
+    $userForm = new UserForm();
+    $userForm->hydrate(json_decode($context->request()->getContent(), true));
+
+    if(!$userForm->first_name->isValid() || !$userForm->last_name->isValid())
     {
-      $user = User::loadById($context->routeData()->getInt('id'));
-      $userForm = new UserForm();
-      $userForm->hydrate(json_decode($context->request()->getContent(), true));
-
-      if(!$userForm->first_name->isValid() || !$userForm->last_name->isValid())
-      {
-        return Response::create(
-          json_encode(
-            ['first_name' => $userForm->first_name->getErrors(), 'last_name' => $userForm->last_name->getErrors()]
-          ),
-          400,
-          ['Content-Type' => 'application/json']
-        );
-      }
-
-      $user->first_name = $userForm->first_name->getValue();
-      $user->last_name = $userForm->last_name->getValue();
-      $user->save();
-
-      return Response::create($user, 200, ['Content-Type' => 'application/json']);
-    }
-    catch(DaoNotFoundException $e)
-    {
-      return Response::create(
-        json_encode(['error' => 'Resource not found!']),
-        404,
-        ['Content-Type' => 'application/json']
+      return JsonResponse::create(
+        ['first_name' => $userForm->first_name->getErrors(), 'last_name' => $userForm->last_name->getErrors()],
+        400
       );
     }
+
+    $user->first_name = $userForm->first_name->getValue();
+    $user->last_name = $userForm->last_name->getValue();
+    $user->save();
+
+    return JsonResponse::create($user);
   }
 
   /**
    * @param UserApiContext $context
    *
-   * @return Response
+   * @return JsonResponse
+   * @throws DaoNotFoundException
    */
-  public function patchDarkMode(UserApiContext $context): Response
+  public function patchDarkMode(UserApiContext $context): JsonResponse
   {
-    try
-    {
-      $user = User::loadById($context->routeData()->getInt('id'));
-      $user->dark_mode = !$user->dark_mode;
-      $user->save();
-      return Response::create($user, 200, ['Content-Type' => 'application/json']);
-    }
-    catch(DaoNotFoundException $e)
-    {
-      return Response::create(
-        json_encode(['error' => 'Resource not found!']),
-        404,
-        ['Content-Type' => 'application/json']
-      );
-    }
+    $user = User::loadById($context->routeData()->getInt('id'));
+    $user->dark_mode = !$user->dark_mode;
+    $user->save();
+    return JsonResponse::create($user);
   }
 
 }

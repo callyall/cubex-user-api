@@ -4,7 +4,8 @@ namespace UserApi\Controllers;
 
 use Cubex\Controller\Controller;
 use Packaged\Context\Context;
-use Packaged\Http\Response;
+use Packaged\Http\Responses\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use UserApi\Context\UserApiContext;
 
 abstract class AuthenticatedController extends Controller
@@ -13,21 +14,17 @@ abstract class AuthenticatedController extends Controller
   /**
    * @param Context $c
    *
-   * @return \Symfony\Component\HttpFoundation\Response
+   * @return JsonResponse
    * @throws \Throwable
    */
-  public function handle(Context $c): \Symfony\Component\HttpFoundation\Response
+  public function handle(Context $c): Response
   {
     /**
      * @var $c UserApiContext
      */
     if(!$c->isAuthenticated())
     {
-      return Response::create(
-        json_encode(['error' => 'Not authenticated']),
-        403,
-        ['Content-Type' => 'application/json']
-      );
+      return JsonResponse::create(['error' => 'Not authenticated'], 403);
     }
     return parent::handle($c);
   }

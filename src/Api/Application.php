@@ -2,16 +2,17 @@
 
 namespace UserApi\Api;
 
-use Cubex\Context\Context;
 use Cubex\Cubex;
-use UserApi\Controllers\AuthenticationController;
-use UserApi\Controllers\IndexController;
+use Packaged\Context\Context;
+use Packaged\Dal\Exceptions\DataStore\DaoNotFoundException;
+use Packaged\Http\Responses\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use UserApi\Application as BaseApplication;
+use UserApi\Controllers\AuthenticationController;
 use UserApi\Controllers\UserController;
 
 class Application extends BaseApplication
 {
-
 
   public function __construct(Cubex $cubex)
   {
@@ -29,14 +30,27 @@ class Application extends BaseApplication
     $this->_configureConnections();
   }
 
-
-
   protected function _generateRoutes()
   {
     yield self::_route('/user', UserController::class);
     yield self::_route('/login', AuthenticationController::class);
 
     return parent::_generateRoutes();
+  }
+
+  public function handle(Context $c): Response
+  {
+    try {
+      return parent::handle($c);
+    }
+    catch(DaoNotFoundException $e)
+    {
+      return JsonResponse::create(['error' => 'Resource not found!'], 404);
+    }
+    catch(\Exception $e)
+    {
+      return JsonResponse::create(['error' => 'Something went wrong!'], 500);
+    }
   }
 
 }
