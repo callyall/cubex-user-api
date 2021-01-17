@@ -1,11 +1,11 @@
-CREATE DATABASE `user_api`;
+CREATE DATABASE `userApi`;
 
-CREATE TABLE `user_api`.`users` (
+CREATE TABLE `userApi`.`users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `last_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `firstName` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `lastName` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `username` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `date_created` TIMESTAMP NOT NULL,
-  `dark_mode` TINYINT DEFAULT 0,
+  `dateCreated` TIMESTAMP NOT NULL,
+  `darkMode` TINYINT DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

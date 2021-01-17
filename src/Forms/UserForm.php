@@ -11,22 +11,22 @@ use Packaged\Validate\Validators\RequiredValidator;
 class UserForm extends Form
 {
 
-  public TextDataHandler $first_name;
-  public TextDataHandler $last_name;
+  public TextDataHandler $firstName;
+  public TextDataHandler $lastName;
   public TextDataHandler $username;
-  public TextDataHandler $dark_mode;
+  public TextDataHandler $darkMode;
 
   protected function _initDataHandlers()
   {
-    $this->first_name = TextDataHandler::i()->addValidator(new RequiredValidator())->addValidator(
+    $this->firstName = TextDataHandler::i()->addValidator(new RequiredValidator())->addValidator(
       new RegexValidator('/^.{1,50}$/')
     );
-    $this->last_name = TextDataHandler::i()->addValidator(new RequiredValidator())->addValidator(
+    $this->lastName = TextDataHandler::i()->addValidator(new RequiredValidator())->addValidator(
       new RegexValidator('/^.{1,50}$/')
     );
     $this->username = TextDataHandler::i()->addValidator(new RequiredValidator())->addValidator(
       new RegexValidator('/^.{6,20}$/')
     );
-    $this->dark_mode = TextDataHandler::i()->addValidator(new BoolValidator());
+    $this->darkMode = TextDataHandler::i()->addValidator(new BoolValidator());
   }
 }

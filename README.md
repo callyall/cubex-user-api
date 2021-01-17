@@ -13,7 +13,7 @@ User Api project
 
 ###create user
 
-    curl -d '{"first_name":"TESTUSER", "last_name":"abcdefg", "username":"testusername", "dark_mode":false}' -H "Content-Type: application/json" -H "token: THE_TOKEN" -X POST http://www.example.cubex-local.com:6789/user
+    curl -d '{"firstName":"TESTUSER", "lastName":"abcdefg", "username":"testusername", "darkMode":false}' -H "Content-Type: application/json" -H "token: THE_TOKEN" -X POST http://www.example.cubex-local.com:6789/user
 
 ###get user
 
@@ -25,7 +25,7 @@ User Api project
 
 ###change the name of the user
 
-    curl -d '{"first_name":"TESTUSER", "last_name":"abcdefg"}' -H "Content-Type: application/json" -H "token: THE_TOKEN" -X PATCH http://www.example.cubex-local.com:6789/user/ID/name
+    curl -d '{"firstName":"TESTUSER", "lastName":"abcdefg"}' -H "Content-Type: application/json" -H "token: THE_TOKEN" -X PATCH http://www.example.cubex-local.com:6789/user/ID/name
 
 ###toggle dark mode
 

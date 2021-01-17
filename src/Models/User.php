@@ -6,25 +6,25 @@ use \Packaged\Dal\Ql\QlDao;
 
 class User extends QlDao
 {
-  protected string $_dataStoreName = 'user_api';
+  protected string $_dataStoreName = 'userApi';
 
   public int $id = 0;
-  public string $first_name = '';
-  public string $last_name = '';
+  public string $firstName = '';
+  public string $lastName = '';
   public string $username = '';
-  public string $date_created = '';
-  public bool $dark_mode = false;
+  public string $dateCreated = '';
+  public bool $darkMode = false;
 
   public function __toString(): string
   {
     return json_encode(
       [
         'id' => $this->id,
-        'first_name' => $this->first_name,
-        'last_name' => $this->last_name,
+        'firstName' => $this->firstName,
+        'lastName' => $this->lastName,
         'username' => $this->username,
-        'date_created' => $this->date_created,
-        'dark_mode' => $this->dark_mode
+        'dateCreated' => $this->dateCreated,
+        'darkMode' => $this->darkMode
       ]
     );
   }

@@ -13,43 +13,43 @@ class GenerateContent extends ConsoleCommand
   protected function executeCommand(InputInterface $input, OutputInterface $output)
   {
     $user = new User();
-    $user->first_name = 'John';
-    $user->last_name = 'Doe';
+    $user->firstName = 'John';
+    $user->lastName = 'Doe';
     $user->username = 'JD';
-    $user->date_created = date('Y-m-d H:i:s', time());
-    $user->dark_mode = true;
+    $user->dateCreated = date('Y-m-d H:i:s', time());
+    $user->darkMode = true;
     $user->save();
 
     $user = new User();
-    $user->first_name = 'Nikolay';
-    $user->last_name = 'Brankov';
+    $user->firstName = 'Nikolay';
+    $user->lastName = 'Brankov';
     $user->username = 'NB';
-    $user->date_created = date('Y-m-d H:i:s', time());
-    $user->dark_mode = false;
+    $user->dateCreated = date('Y-m-d H:i:s', time());
+    $user->darkMode = false;
     $user->save();
 
     $user = new User();
-    $user->first_name = 'George';
-    $user->last_name = 'Smith';
+    $user->firstName = 'George';
+    $user->lastName = 'Smith';
     $user->username = 'GS';
-    $user->date_created = date('Y-m-d H:i:s', time());
-    $user->dark_mode = true;
+    $user->dateCreated = date('Y-m-d H:i:s', time());
+    $user->darkMode = true;
     $user->save();
 
     $user = new User();
-    $user->first_name = 'Aaron';
-    $user->last_name = 'Lewis';
+    $user->firstName = 'Aaron';
+    $user->lastName = 'Lewis';
     $user->username = 'AL';
-    $user->date_created = date('Y-m-d H:i:s', time());
-    $user->dark_mode = false;
+    $user->dateCreated = date('Y-m-d H:i:s', time());
+    $user->darkMode = false;
     $user->save();
 
     $user = new User();
-    $user->first_name = 'Daniel';
-    $user->last_name = 'Ding';
+    $user->firstName = 'Daniel';
+    $user->lastName = 'Ding';
     $user->username = 'DD';
-    $user->date_created = date('Y-m-d H:i:s', time());
-    $user->dark_mode = true;
+    $user->dateCreated = date('Y-m-d H:i:s', time());
+    $user->darkMode = true;
     $user->save();
   }
 

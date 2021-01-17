@@ -13,6 +13,7 @@ use Packaged\QueryBuilder\Predicate\LikePredicate;
 use UserApi\Context\UserApiContext;
 use UserApi\Forms\UserForm;
 use UserApi\Models\User;
+use Exception;
 
 class UserController extends AuthenticatedController
 {
@@ -42,17 +43,17 @@ class UserController extends AuthenticatedController
       $users->limit($this->request()->query->get('limit'));
     }
 
-    if($this->request()->query->has('first_name'))
+    if($this->request()->query->has('firstName'))
     {
-      $params[] = (new LikePredicate())->setField('first_name')->setExpression(
-        ContainsExpression::create($this->request()->query->get('first_name'))
+      $params[] = (new LikePredicate())->setField('firstName')->setExpression(
+        ContainsExpression::create($this->request()->query->get('firstName'))
       );
     }
 
-    if($this->request()->query->has('last_name'))
+    if($this->request()->query->has('lastName'))
     {
-      $params[] = (new LikePredicate())->setField('last_name')->setExpression(
-        ContainsExpression::create($this->request()->query->get('last_name'))
+      $params[] = (new LikePredicate())->setField('lastName')->setExpression(
+        ContainsExpression::create($this->request()->query->get('lastName'))
       );
     }
 
@@ -63,11 +64,11 @@ class UserController extends AuthenticatedController
       );
     }
 
-    if($this->request()->query->has('dark_mode'))
+    if($this->request()->query->has('darkMode'))
     {
-      $dark_mode = $this->request()->query->get('dark_mode') === 'true';
-      $params[] = (new EqualPredicate())->setField('dark_mode')->setExpression(
-        ValueExpression::create($dark_mode)
+      $darkMode = $this->request()->query->get('darkMode') === 'true';
+      $params[] = (new EqualPredicate())->setField('darkMode')->setExpression(
+        ValueExpression::create($darkMode)
       );
     }
 
@@ -111,7 +112,7 @@ class UserController extends AuthenticatedController
     {
       $users = $this->_search();
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       return JsonResponse::create(['error' => 'Something went wrong!'], 500);
     }
@@ -134,11 +135,11 @@ class UserController extends AuthenticatedController
     }
 
     $user = new User();
-    $user->first_name = $userForm->first_name->getValue();
-    $user->last_name = $userForm->last_name->getValue();
+    $user->firstName = $userForm->firstName->getValue();
+    $user->lastName = $userForm->lastName->getValue();
     $user->username = $userForm->username->getValue();
-    $user->dark_mode = $userForm->dark_mode->getValue() === 'true';
-    $user->date_created = date('Y-m-d H:i:s', time());
+    $user->darkMode = $userForm->darkMode->getValue() === 'true';
+    $user->dateCreated = date('Y-m-d H:i:s', time());
     $user->save();
     return JsonResponse::create($user);
   }
@@ -179,16 +180,16 @@ class UserController extends AuthenticatedController
     $userForm = new UserForm();
     $userForm->hydrate(json_decode($context->request()->getContent(), true));
 
-    if(!$userForm->first_name->isValid() || !$userForm->last_name->isValid())
+    if(!$userForm->firstName->isValid() || !$userForm->lastName->isValid())
     {
       return JsonResponse::create(
-        ['first_name' => $userForm->first_name->getErrors(), 'last_name' => $userForm->last_name->getErrors()],
+        ['firstName' => $userForm->firstName->getErrors(), 'lastName' => $userForm->lastName->getErrors()],
         400
       );
     }
 
-    $user->first_name = $userForm->first_name->getValue();
-    $user->last_name = $userForm->last_name->getValue();
+    $user->firstName = $userForm->firstName->getValue();
+    $user->lastName = $userForm->lastName->getValue();
     $user->save();
 
     return JsonResponse::create($user);
@@ -203,7 +204,7 @@ class UserController extends AuthenticatedController
   public function patchDarkMode(UserApiContext $context): JsonResponse
   {
     $user = User::loadById($context->routeData()->getInt('id'));
-    $user->dark_mode = !$user->dark_mode;
+    $user->darkMode = !$user->darkMode;
     $user->save();
     return JsonResponse::create($user);
   }

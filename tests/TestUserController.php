@@ -76,17 +76,17 @@ class TestUserController extends TestCase
     $this->assertEquals(200, $response->getStatusCode());
     $this->assertEquals(2, count(json_decode($response->getContent(), true)));
 
-    // request with first_name search parameter
-    $response = $this->_proccessRequest(Request::create('/user', 'get', ['first_name' => 'Nikolay']), true);
+    // request with firstName search parameter
+    $response = $this->_proccessRequest(Request::create('/user', 'get', ['firstName' => 'Nikolay']), true);
 
     $this->assertEquals(200, $response->getStatusCode());
-    $this->assertEquals('Nikolay', json_decode($response->getContent(), true)[0]['first_name']);
+    $this->assertEquals('Nikolay', json_decode($response->getContent(), true)[0]['firstName']);
 
-    // request with last_name search parameter
-    $response = $this->_proccessRequest(Request::create('/user', 'get', ['last_name' => 'Brankov']), true);
+    // request with lastName search parameter
+    $response = $this->_proccessRequest(Request::create('/user', 'get', ['lastName' => 'Brankov']), true);
 
     $this->assertEquals(200, $response->getStatusCode());
-    $this->assertEquals('Brankov', json_decode($response->getContent(), true)[0]['last_name']);
+    $this->assertEquals('Brankov', json_decode($response->getContent(), true)[0]['lastName']);
 
     // request with username search parameter
     $response = $this->_proccessRequest(Request::create('/user', 'get', ['username' => 'NB']), true);
@@ -94,24 +94,24 @@ class TestUserController extends TestCase
     $this->assertEquals(200, $response->getStatusCode());
     $this->assertEquals('NB', json_decode($response->getContent(), true)[0]['username']);
 
-    // request with dark_mode=true
-    $response = $this->_proccessRequest(Request::create('/user', 'get', ['dark_mode' => 'true']), true);
+    // request with darkMode=true
+    $response = $this->_proccessRequest(Request::create('/user', 'get', ['darkMode' => 'true']), true);
 
     $this->assertEquals(200, $response->getStatusCode());
     $users = json_decode($response->getContent(), true);
     foreach($users as $user)
     {
-      $this->assertEquals(true, $user['dark_mode']);
+      $this->assertEquals(true, $user['darkMode']);
     }
 
-    // request with dark_mode=false
-    $response = $this->_proccessRequest(Request::create('/user', 'get', ['dark_mode' => 'false']), true);
+    // request with darkMode=false
+    $response = $this->_proccessRequest(Request::create('/user', 'get', ['darkMode' => 'false']), true);
 
     $this->assertEquals(200, $response->getStatusCode());
     $users = json_decode($response->getContent(), true);
     foreach($users as $user)
     {
-      $this->assertEquals(false, $user['dark_mode']);
+      $this->assertEquals(false, $user['darkMode']);
     }
   }
 
@@ -128,10 +128,10 @@ class TestUserController extends TestCase
         [],
         json_encode(
           [
-            'first_name' => 'Test',
-            'last_name'  => 'User',
+            'firstName' => 'Test',
+            'lastName'  => 'User',
             'username'   => 'TestUser',
-            'dark_mode'  => true,
+            'darkMode'  => true,
           ]
         )
       ),
@@ -151,8 +151,8 @@ class TestUserController extends TestCase
         [],
         json_encode(
           [
-            'first_name' => 'Test',
-            'last_name'  => 'User',
+            'firstName' => 'Test',
+            'lastName'  => 'User',
           ]
         )
       ),
@@ -206,8 +206,8 @@ class TestUserController extends TestCase
         [],
         json_encode(
           [
-            'first_name' => md5(uniqid(rand(), true)),
-            'last_name'  => md5(uniqid(rand(), true)),
+            'firstName' => md5(uniqid(rand(), true)),
+            'lastName'  => md5(uniqid(rand(), true)),
           ]
         )
       ),
@@ -216,8 +216,8 @@ class TestUserController extends TestCase
 
     $this->assertEquals(200, $response->getStatusCode());
     $updatedUser = json_decode($response->getContent(), true);
-    $this->assertNotEquals($user['first_name'], $updatedUser['first_name']);
-    $this->assertNotEquals($user['last_name'], $updatedUser['last_name']);
+    $this->assertNotEquals($user['firstName'], $updatedUser['firstName']);
+    $this->assertNotEquals($user['lastName'], $updatedUser['lastName']);
 
     // non existing user
     $response = $this->_proccessRequest(
@@ -230,8 +230,8 @@ class TestUserController extends TestCase
         [],
         json_encode(
           [
-            'first_name' => md5(uniqid(rand(), true)),
-            'last_name'  => md5(uniqid(rand(), true)),
+            'firstName' => md5(uniqid(rand(), true)),
+            'lastName'  => md5(uniqid(rand(), true)),
           ]
         )
       ),
@@ -250,7 +250,7 @@ class TestUserController extends TestCase
     $response = $this->_proccessRequest(Request::create('/user/' . $user['id'] . '/dark-mode', 'patch'), true);
     $this->assertEquals(200, $response->getStatusCode());
     $updatedUser = json_decode($response->getContent(), true);
-    $this->assertNotEquals($user['dark_mode'], $updatedUser['dark_mode']);
+    $this->assertNotEquals($user['darkMode'], $updatedUser['darkMode']);
 
     // non existing user
     $response = $this->_proccessRequest(Request::create('/user/2222/dark-mode', 'patch'), true);
