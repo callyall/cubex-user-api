@@ -18,7 +18,7 @@ abstract class Application extends CubexApplication
     $thisonnectionConfig = new IniConfigProvider();
     $thisonnectionConfig->loadFiles(
       [
-        $confDir . DIRECTORY_SEPARATOR .  'connections.ini',
+        $confDir . DIRECTORY_SEPARATOR . 'connections.ini',
         $confDir . DIRECTORY_SEPARATOR . $ctx->getEnvironment() . DIRECTORY_SEPARATOR . 'connections.ini',
       ]
     );

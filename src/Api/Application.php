@@ -3,6 +3,8 @@
 namespace UserApi\Api;
 
 use Cubex\Cubex;
+use ErrorException;
+use Exception;
 use Packaged\Context\Context;
 use Packaged\Dal\Exceptions\DataStore\DaoNotFoundException;
 use Packaged\Http\Responses\JsonResponse;
@@ -22,7 +24,7 @@ class Application extends BaseApplication
       function ($errno, $errstr, $errfile, $errline) {
         if((error_reporting() & $errno) && !($errno & E_NOTICE))
         {
-          throw new \ErrorException($errstr, 0, $errno, str_replace(dirname(__DIR__), '', $errfile), $errline);
+          throw new ErrorException($errstr, 0, $errno, str_replace(dirname(__DIR__), '', $errfile), $errline);
         }
       }
     );
@@ -40,14 +42,15 @@ class Application extends BaseApplication
 
   public function handle(Context $c): Response
   {
-    try {
+    try
+    {
       return parent::handle($c);
     }
     catch(DaoNotFoundException $e)
     {
       return JsonResponse::create(['error' => 'Resource not found!'], 404);
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       return JsonResponse::create(['error' => 'Something went wrong!'], 500);
     }

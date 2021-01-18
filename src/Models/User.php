@@ -2,7 +2,7 @@
 
 namespace UserApi\Models;
 
-use \Packaged\Dal\Ql\QlDao;
+use Packaged\Dal\Ql\QlDao;
 
 class User extends QlDao
 {
@@ -19,12 +19,12 @@ class User extends QlDao
   {
     return json_encode(
       [
-        'id' => $this->id,
-        'firstName' => $this->firstName,
-        'lastName' => $this->lastName,
-        'username' => $this->username,
+        'id'          => $this->id,
+        'firstName'   => $this->firstName,
+        'lastName'    => $this->lastName,
+        'username'    => $this->username,
         'dateCreated' => $this->dateCreated,
-        'darkMode' => $this->darkMode
+        'darkMode'    => $this->darkMode,
       ]
     );
   }

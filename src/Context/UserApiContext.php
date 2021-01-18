@@ -5,6 +5,7 @@ namespace UserApi\Context;
 use Cubex\Context\Context;
 use Cubex\Context\Events\ConsoleCreatedEvent;
 use Cubex\Cubex;
+use Exception;
 use Firebase\JWT\JWT;
 use UserApi\Cli\Application;
 
@@ -21,7 +22,6 @@ class UserApiContext extends Context
         $this->getCubex()->share(Application::class, Application::launch($this), Cubex::MODE_IMMUTABLE);
       }
     );
-
   }
 
   /**
@@ -39,8 +39,9 @@ class UserApiContext extends Context
         JWT::decode($token, $this->getConfig()->getSection('jwt')->getItem('key'), ['HS256']);
         return true;
       }
-      catch(\Exception $e)
-      {}
+      catch(Exception $e)
+      {
+      }
     }
 
     return false;

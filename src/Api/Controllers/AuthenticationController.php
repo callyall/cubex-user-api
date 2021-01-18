@@ -3,6 +3,7 @@
 namespace UserApi\Api\Controllers;
 
 use Cubex\Controller\Controller;
+use Exception;
 use Firebase\JWT\JWT;
 use Packaged\Http\Responses\JsonResponse;
 use UserApi\Context\UserApiContext;
@@ -23,7 +24,7 @@ class AuthenticationController extends Controller
    * @param UserApiContext $context
    *
    * @return JsonResponse
-   * @throws \Exception
+   * @throws Exception
    */
   public function postLogin(UserApiContext $context): JsonResponse
   {

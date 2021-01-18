@@ -17,6 +17,19 @@ class TestAuthenticationController extends TestCase
     $this->_app = new Application(Cubex::withCustomContext(UserApiContext::class, dirname(__DIR__), null, false));
   }
 
+  protected function _prepareRequest(array $data): Request
+  {
+    return Request::create(
+      '/login',
+      'POST',
+      [],
+      [],
+      [],
+      [],
+      json_encode($data)
+    );
+  }
+
   protected function _proccessRequest(Request $request): Response
   {
     $context = new UserApiContext($request);
@@ -27,51 +40,17 @@ class TestAuthenticationController extends TestCase
   public function testLogin()
   {
     // Valid data
-    $request = Request::create(
-      '/login',
-      'POST',
-      [],
-      [],
-      [],
-      [],
-      json_encode(['username' => 'admin', 'password' => '1234'])
-    );
-
-    $response = $this->_proccessRequest($request);
-
+    $response = $this->_proccessRequest($this->_prepareRequest(['username' => 'admin', 'password' => '1234']));
     $this->assertEquals(200, $response->getStatusCode());
     $this->assertArrayHasKey('token', json_decode($response->getContent(), true));
 
     // Invalid data
-    $request = Request::create(
-      '/login',
-      'POST',
-      [],
-      [],
-      [],
-      [],
-      json_encode(['password' => '1234'])
-    );
-
-    $response = $this->_proccessRequest($request);
-
+    $response = $this->_proccessRequest($this->_prepareRequest(['password' => '1234']));
     $this->assertEquals(400, $response->getStatusCode());
 
     // Wrong credentials
-    $request = Request::create(
-      '/login',
-      'POST',
-      [],
-      [],
-      [],
-      [],
-      json_encode(['username' => 'admiiin', 'password' => '1234'])
-    );
-
-    $response = $this->_proccessRequest($request);
-
+    $response = $this->_proccessRequest($this->_prepareRequest(['username' => 'admiiin', 'password' => '1234']));
     $this->assertEquals(401, $response->getStatusCode());
-
   }
 
 }

@@ -2,6 +2,7 @@
 
 namespace UserApi\Api\Controllers;
 
+use Exception;
 use Generator;
 use Packaged\Dal\Exceptions\DataStore\DaoNotFoundException;
 use Packaged\Dal\Ql\QlDaoCollection;
@@ -13,7 +14,6 @@ use Packaged\QueryBuilder\Predicate\LikePredicate;
 use UserApi\Context\UserApiContext;
 use UserApi\Forms\UserForm;
 use UserApi\Models\User;
-use Exception;
 
 class UserController extends AuthenticatedController
 {
@@ -30,7 +30,7 @@ class UserController extends AuthenticatedController
 
   /**
    * @return QlDaoCollection
-   * @throws \Exception
+   * @throws Exception
    */
   protected function _search(): QlDaoCollection
   {
@@ -105,18 +105,11 @@ class UserController extends AuthenticatedController
 
   /**
    * @return JsonResponse
+   * @throws Exception
    */
   public function getIndex(): JsonResponse
   {
-    try
-    {
-      $users = $this->_search();
-    }
-    catch(Exception $e)
-    {
-      return JsonResponse::create(['error' => 'Something went wrong!'], 500);
-    }
-    return JsonResponse::create($users);
+    return JsonResponse::create($this->_search());
   }
 
   /**
