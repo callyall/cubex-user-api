@@ -31,15 +31,11 @@ class AuthenticationController extends Controller
     $request = json_decode($context->request()->getContent(), true);
     $jwtConfig = $context->getConfig()->getSection('jwt')->getItems();
 
-    if(!array_key_exists('username', $jwtConfig) || !array_key_exists('password', $jwtConfig))
-    {
-      return JsonResponse::create(['error' => 'Something went wrong!'], 500);
-    }
-
     $loginForm = new LoginForm();
-    $errors = $loginForm->hydrate($request);
+    $loginForm->hydrate($request);
+    $errors = $context->getErrorMessages($loginForm->validate());
 
-    if(!$loginForm->isValid())
+    if(count($errors))
     {
       return JsonResponse::create(['errors' => $errors], 400);
     }
@@ -50,7 +46,6 @@ class AuthenticationController extends Controller
     }
 
     $host = $context->request()->getHost();
-
     return JsonResponse::create(
       [
         'token' => JWT::encode(

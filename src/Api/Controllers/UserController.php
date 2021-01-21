@@ -120,9 +120,9 @@ class UserController extends AuthenticatedController
   public function postIndex(UserApiContext $context): JsonResponse
   {
     $userForm = new UserForm();
-    $errors = $userForm->hydrate(json_decode($context->request()->getContent(), true));
-
-    if(!$userForm->isValid())
+    $userForm->hydrate(json_decode($context->request()->getContent(), true));
+    $errors = $context->getErrorMessages($userForm->validate());
+    if(count($errors))
     {
       return JsonResponse::create(['errors' => $errors], 400);
     }
@@ -172,13 +172,10 @@ class UserController extends AuthenticatedController
     $user = User::loadById($context->routeData()->getInt('id'));
     $userForm = new UserForm();
     $userForm->hydrate(json_decode($context->request()->getContent(), true));
-
-    if(!$userForm->firstName->isValid() || !$userForm->lastName->isValid())
+    $errors = $context->getErrorMessages(['firstName' => $userForm->firstName->validate(), 'lastName' => $userForm->lastName->validate()]);
+    if(count($errors))
     {
-      return JsonResponse::create(
-        ['firstName' => $userForm->firstName->getErrors(), 'lastName' => $userForm->lastName->getErrors()],
-        400
-      );
+      return JsonResponse::create(['errors' => $errors], 400);
     }
 
     $user->firstName = $userForm->firstName->getValue();

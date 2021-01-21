@@ -7,6 +7,7 @@ use Cubex\Context\Events\ConsoleCreatedEvent;
 use Cubex\Cubex;
 use Exception;
 use Firebase\JWT\JWT;
+use Packaged\Validate\ValidationException;
 use UserApi\Cli\Application;
 
 class UserApiContext extends Context
@@ -45,6 +46,21 @@ class UserApiContext extends Context
     }
 
     return false;
+  }
+
+  public function getErrorMessages(array $fields): array
+  {
+    foreach($fields as $name => $validationErrors)
+    {
+      /**
+       * @var ValidationException $error
+       */
+      foreach($validationErrors as $key => $error)
+      {
+        $fields[$name][$key] = $error->getMessage();
+      }
+    }
+    return $fields;
   }
 
 }
