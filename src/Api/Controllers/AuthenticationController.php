@@ -2,14 +2,11 @@
 
 namespace UserApi\Api\Controllers;
 
-use Cubex\Controller\Controller;
 use Exception;
-use Firebase\JWT\JWT;
 use Packaged\Http\Responses\JsonResponse;
-use UserApi\Context\UserApiContext;
-use UserApi\Forms\LoginForm;
+use UserApi\Api\Services\AuthenticationService;
 
-class AuthenticationController extends Controller
+class AuthenticationController extends AbstractController
 {
 
   /**
@@ -21,42 +18,30 @@ class AuthenticationController extends Controller
   }
 
   /**
-   * @param UserApiContext $context
+   * @param AuthenticationService $service
    *
    * @return JsonResponse
    * @throws Exception
    */
-  public function postLogin(UserApiContext $context): JsonResponse
+  public function postLogin(AuthenticationService $service): JsonResponse
   {
-    $request = json_decode($context->request()->getContent(), true);
-    $jwtConfig = $context->getConfig()->getSection('jwt')->getItems();
+    $errors = $service->getValidationErrors();
 
-    $loginForm = new LoginForm();
-    $loginForm->hydrate($request);
-    $errors = $context->getErrorMessages($loginForm->validate());
-
-    if(count($errors))
+    if(!empty($errors))
     {
       return JsonResponse::create(['errors' => $errors], 400);
     }
 
-    if($request['username'] !== $jwtConfig['username'] || $request['password'] !== $jwtConfig['password'])
+    $result = $service->authenticate();
+
+    if(!$result['isAuthenticated'])
     {
       return JsonResponse::create(['error' => 'Wrong credentials!'], 401);
     }
 
-    $host = $context->request()->getHost();
     return JsonResponse::create(
       [
-        'token' => JWT::encode(
-          [
-            'iss' => $host,
-            'aud' => $host,
-            'iat' => time(),
-            'exp' => time() + intval($jwtConfig['exp']),
-          ],
-          $jwtConfig['key']
-        ),
+        'token' => $result['jwt'],
       ]
     );
   }

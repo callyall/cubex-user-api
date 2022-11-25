@@ -8,7 +8,7 @@ use Packaged\Http\Responses\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use UserApi\Context\UserApiContext;
 
-abstract class AuthenticatedController extends Controller
+abstract class AuthenticatedController extends AbstractController
 {
 
   /**

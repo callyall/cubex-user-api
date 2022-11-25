@@ -3,6 +3,7 @@
 namespace UserApi;
 
 use Cubex\Application\Application as CubeXApplication;
+use Packaged\Config\ConfigProviderInterface;
 use Packaged\Config\Provider\Ini\IniConfigProvider;
 use Packaged\Dal\DalResolver;
 use Packaged\Helpers\Path;
@@ -15,8 +16,8 @@ abstract class Application extends CubexApplication
     $ctx = $this->getContext();
     $confDir = Path::system($ctx->getProjectRoot(), 'conf');
 
-    $thisonnectionConfig = new IniConfigProvider();
-    $thisonnectionConfig->loadFiles(
+    $configProvider = new IniConfigProvider();
+    $configProvider->loadFiles(
       [
         $confDir . DIRECTORY_SEPARATOR . 'connections.ini',
         $confDir . DIRECTORY_SEPARATOR . $ctx->getEnvironment() . DIRECTORY_SEPARATOR . 'connections.ini',
@@ -29,8 +30,9 @@ abstract class Application extends CubexApplication
         $confDir . DIRECTORY_SEPARATOR . $ctx->getEnvironment() . DIRECTORY_SEPARATOR . 'datastores.ini',
       ]
     );
-    $resolver = new DalResolver($thisonnectionConfig, $datastoreConfig);
+    $resolver = new DalResolver($configProvider, $datastoreConfig);
     $this->getCubex()->share(DalResolver::class, $resolver);
     $resolver->boot();
+    $this->getCubex()->share(ConfigProviderInterface::class, $ctx->getConfig());
   }
 }
