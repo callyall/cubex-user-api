@@ -3,8 +3,9 @@
 namespace UserApi\Api\Controllers;
 
 use Cubex\Controller\Controller;
-use ReflectionClass;
+use Packaged\DiContainer\DependencyInjector;
 use UserApi\Context\UserApiContext;
+use UserApi\DependencyResolver\DependencyResolverInterface;
 
 abstract class AbstractController extends Controller
 {
@@ -18,78 +19,27 @@ abstract class AbstractController extends Controller
    */
   protected function _processHandler($c, $handler, &$response): bool
   {
+    // Share route data
+    foreach($c->routeData()->all() as $key => $value)
+    {
+      $c->getCubex()->share($key, $value, DependencyInjector::MODE_IMMUTABLE);
+    }
+
+    /**
+     * @var DependencyResolverInterface $resolver
+     */
+    $resolver = $c
+      ->getCubex()
+      ->retrieve(DependencyResolverInterface::class);
+
     while(is_callable($handler))
     {
-      $handler = $handler(...$this->_loadDependencies($c, $handler));
+      $handler = $handler(
+        ...$resolver
+          ->getDependencyInstances((new \ReflectionClass($handler[0])), $handler[1])
+      );
     }
 
     return parent::_processHandler($c, $handler, $response);
-  }
-
-  /**
-   * @param UserApiContext $c
-   * @param callable       $handler
-   *
-   * @return array
-   * @throws \ReflectionException
-   */
-  protected function _loadDependencies($c, $handler)
-  {
-    $params = (new \ReflectionClass($handler[0]))
-      ->getMethod($handler[1])
-      ->getParameters();
-
-    $instances = [];
-
-    foreach($params as $param)
-    {
-      if(!$param->getType())
-      {
-        $instances[] = $this->getContext()->routeData()->getAlnum($param->getName());
-        continue;
-      }
-
-      $type = $param->getType()->getName();
-      if($this->getContext() instanceof $type)
-      {
-        $instances[] = $this->getContext();
-      }
-      else
-      {
-        if($param->getType()->isBuiltin())
-        {
-          switch($param->getType()->getName())
-          {
-            case 'int':
-              $instances[] = $this->getContext()->routeData()->getInt($param->getName());
-              break;
-            case 'bool':
-              $instances[] = $this->getContext()->routeData()->getBoolean($param->getName());
-              break;
-            case 'float':
-              $instances[] = $this->getContext()->routeData()->getDigits($param->getName());
-              break;
-            case 'string':
-            default:
-              $instances[] = $this->getContext()->routeData()->getAlnum($param->getName());
-          }
-        }
-        else
-        {
-          $className = $param->getType()->getName();
-          if(!$c->getCubex()->isAvailable($className))
-          {
-            $reflection = new ReflectionClass($className);
-
-            $className = $reflection->getParentClass()
-              ? $reflection->getParentClass()->getName()
-              : $reflection->getInterfaceNames()[0];
-          }
-          $instances[] = $c->getCubex()->retrieve($className, [$param->getType()->getName()]);
-        }
-      }
-    }
-
-    return $instances;
   }
 }

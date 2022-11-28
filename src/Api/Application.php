@@ -9,12 +9,14 @@ use Packaged\DiContainer\DependencyInjector;
 use Packaged\Form\Form\Form;
 use Packaged\Http\Request;
 use Packaged\Http\Responses\JsonResponse;
+use ReflectionClass;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 use UserApi\Api\Controllers\AuthenticationController;
 use UserApi\Api\Controllers\UserController;
 use UserApi\Api\Services\ServiceInterface;
 use UserApi\Application as BaseApplication;
+use UserApi\DependencyResolver\DependencyResolverInterface;
 
 class Application extends BaseApplication
 {
@@ -71,36 +73,9 @@ class Application extends BaseApplication
 
     // Retrieve services and instantiate them with specific constructor parameters
     $cubex->factory(ServiceInterface::class, function ($className) use ($ctx, $cubex) {
-      $reflection = (new \ReflectionClass($className));
-      $paramInstances = [];
-
-      if(!$reflection->hasMethod('__construct'))
-      {
-        return new $className();
-      }
-
-      foreach($reflection->getMethod('__construct')->getParameters() as $constructorParam)
-      {
-        if($cubex->isAvailable($constructorParam->getType()->getName()))
-        {
-          $paramInstances[] = $cubex->retrieve($constructorParam->getType()->getName());
-        }
-        else
-        {
-          $paramReflection = new \ReflectionClass($constructorParam->getType()->getName());
-
-          $paramInstances[] = $cubex->retrieve(
-            (
-            $paramReflection->getParentClass()
-              ? $paramReflection->getParentClass()->getName()
-              : $paramReflection->getInterfaceNames()[0]
-            ),
-            [$constructorParam->getType()->getName()]
-          );
-        }
-      }
-
-      return new $className(...$paramInstances);
+      /** @var $resolver DependencyResolverInterface */
+      $resolver = $cubex->retrieve(DependencyResolverInterface::class);
+      return new $className(...$resolver->getDependencyInstances(new ReflectionClass($className)));
     });
   }
 

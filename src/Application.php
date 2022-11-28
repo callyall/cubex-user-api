@@ -6,7 +6,10 @@ use Cubex\Application\Application as CubeXApplication;
 use Packaged\Config\ConfigProviderInterface;
 use Packaged\Config\Provider\Ini\IniConfigProvider;
 use Packaged\Dal\DalResolver;
+use Packaged\DiContainer\DependencyInjector;
 use Packaged\Helpers\Path;
+use UserApi\DependencyResolver\DependencyResolver;
+use UserApi\DependencyResolver\DependencyResolverInterface;
 
 abstract class Application extends CubexApplication
 {
@@ -14,6 +17,7 @@ abstract class Application extends CubexApplication
   protected function _configureConnections()
   {
     $ctx = $this->getContext();
+    $cubex = $this->getCubex();
     $confDir = Path::system($ctx->getProjectRoot(), 'conf');
 
     $configProvider = new IniConfigProvider();
@@ -31,8 +35,9 @@ abstract class Application extends CubexApplication
       ]
     );
     $resolver = new DalResolver($configProvider, $datastoreConfig);
-    $this->getCubex()->share(DalResolver::class, $resolver);
+    $cubex->share(DalResolver::class, $resolver);
     $resolver->boot();
-    $this->getCubex()->share(ConfigProviderInterface::class, $ctx->getConfig());
+    $cubex->share(ConfigProviderInterface::class, $ctx->getConfig());
+    $cubex->share(DependencyResolverInterface::class, new DependencyResolver($this->getCubex()), DependencyInjector::MODE_IMMUTABLE);
   }
 }
