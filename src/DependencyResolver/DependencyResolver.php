@@ -27,6 +27,14 @@ class DependencyResolver implements DependencyResolverInterface
    */
   public function getAvailableAbstractForClass(ReflectionClass $class, ?string $varName = null): ?string
   {
+    foreach($class->getInterfaceNames() as $interfaceName)
+    {
+      if($this->_cubex->isAvailable($interfaceName))
+      {
+        return $interfaceName;
+      }
+    }
+
     $parent = $class;
 
     while ($parent !== false)
@@ -37,14 +45,6 @@ class DependencyResolver implements DependencyResolverInterface
       }
 
       $parent = $parent->getParentClass();
-    }
-
-    foreach($class->getInterfaceNames() as $interfaceName)
-    {
-      if($this->_cubex->isAvailable($interfaceName))
-      {
-        return $interfaceName;
-      }
     }
 
     return $varName ? $this->getAvailableByName($varName) : null;

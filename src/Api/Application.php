@@ -9,11 +9,10 @@ use Packaged\DiContainer\DependencyInjector;
 use Packaged\Form\Form\Form;
 use Packaged\Http\Request;
 use Packaged\Http\Responses\JsonResponse;
+use Packaged\Routing\Handler\Handler;
 use ReflectionClass;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
-use UserApi\Api\Controllers\AuthenticationController;
-use UserApi\Api\Controllers\UserController;
 use UserApi\Api\Services\ServiceInterface;
 use UserApi\Application as BaseApplication;
 use UserApi\DependencyResolver\DependencyResolverInterface;
@@ -26,14 +25,6 @@ class Application extends BaseApplication
     parent::__construct($cubex);
     $this->setContext($cubex->getContext());
     $this->_configureConnections();
-  }
-
-  protected function _generateRoutes()
-  {
-    yield self::_route('/user', UserController::class);
-    yield self::_route('/login', AuthenticationController::class);
-
-    return parent::_generateRoutes();
   }
 
   public function handle(Context $c): Response
@@ -77,6 +68,11 @@ class Application extends BaseApplication
       $resolver = $cubex->retrieve(DependencyResolverInterface::class);
       return new $className(...$resolver->getDependencyInstances(new ReflectionClass($className)));
     });
+  }
+
+  protected function _defaultHandler(): Handler
+  {
+    return new Router();
   }
 
 }

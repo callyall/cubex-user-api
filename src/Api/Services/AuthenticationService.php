@@ -38,10 +38,10 @@ class AuthenticationService implements ServiceInterface
   }
 
   /**
-   * @return array
+   * @return string|null
    * @throws \Exception
    */
-  public function authenticate(): array
+  public function authenticate(): ?string
   {
     $jwtConfig = $this->_config->getSection('jwt')->getItems();
     $username = ($this->_form->getDataHandlers()['username'])->getValue();
@@ -49,20 +49,17 @@ class AuthenticationService implements ServiceInterface
 
     if($username !== $jwtConfig['username'] || $password !== $jwtConfig['password'])
     {
-      return ['isAuthenticated' => false, 'jwt' => null];
+      return null;
     }
 
-    return [
-      'isAuthenticated' => true,
-      'jwt'             => JWT::encode(
-        [
-          'iss' => $jwtConfig['host'],
-          'aud' => $jwtConfig['host'],
-          'iat' => time(),
-          'exp' => time() + intval($jwtConfig['exp']),
-        ],
-        $jwtConfig['key']
-      ),
-    ];
+    return JWT::encode(
+      [
+        'iss' => $jwtConfig['host'],
+        'aud' => $jwtConfig['host'],
+        'iat' => time(),
+        'exp' => time() + intval($jwtConfig['exp']),
+      ],
+      $jwtConfig['key']
+    );
   }
 }

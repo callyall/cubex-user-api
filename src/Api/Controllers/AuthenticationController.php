@@ -34,16 +34,9 @@ class AuthenticationController extends AbstractController
 
     $result = $service->authenticate();
 
-    if(!$result['isAuthenticated'])
-    {
-      return JsonResponse::create(['error' => 'Wrong credentials!'], 401);
-    }
-
-    return JsonResponse::create(
-      [
-        'token' => $result['jwt'],
-      ]
-    );
+    return empty($result)
+      ? JsonResponse::create(['error' => 'Wrong credentials!'], 401)
+      : JsonResponse::create(['token' => $result]);
   }
 
 }
