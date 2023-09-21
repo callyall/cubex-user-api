@@ -7,8 +7,8 @@ use Generator;
 use Packaged\Dal\Exceptions\DataStore\DaoNotFoundException;
 use Packaged\Http\Request;
 use Packaged\Http\Responses\JsonResponse;
+use UserApi\Api\Forms\UserForm;
 use UserApi\Api\Services\UserService;
-use UserApi\Forms\UserForm;
 
 class UserController extends AuthenticatedController
 {
@@ -87,7 +87,7 @@ class UserController extends AuthenticatedController
    */
   public function patchName(int $id, UserService $service, UserForm $userForm): JsonResponse
   {
-    $result = $service->updateUserName($id, $userForm);
+    $result = $service->pwdupdateUserName($id, $userForm);
 
     if(!empty($result['errors']))
     {

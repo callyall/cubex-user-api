@@ -1,6 +1,6 @@
 <?php
 
-namespace UserApi\Forms;
+namespace UserApi\Api\Forms;
 
 use Packaged\Form\DataHandlers\TextDataHandler;
 use Packaged\Form\Form\Form;

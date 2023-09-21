@@ -9,7 +9,7 @@ use Packaged\QueryBuilder\Expression\ValueExpression;
 use Packaged\QueryBuilder\Predicate\EqualPredicate;
 use Packaged\QueryBuilder\Predicate\LikePredicate;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use UserApi\Forms\UserForm;
+use UserApi\Api\Forms\UserForm;
 use UserApi\Models\User;
 
 class UserService implements ServiceInterface

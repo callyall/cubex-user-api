@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8cd879acb385039d9637c0334cbcefc3",
+    "content-hash": "722e884d1c9979ae7580582c07fc524e",
     "packages": [
         {
             "name": "cubex/framework",
@@ -291,6 +291,125 @@
                 "source": "https://github.com/firebase/php-jwt/tree/master"
             },
             "time": "2020-03-25T18:49:23+00:00"
+        },
+        {
+            "name": "google/protobuf",
+            "version": "v3.22.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/protocolbuffers/protobuf-php.git",
+                "reference": "66495c7f8be461c4a65d697e0705a7ef55ca8c19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/66495c7f8be461c4a65d697e0705a7ef55ca8c19",
+                "reference": "66495c7f8be461c4a65d697e0705a7ef55ca8c19",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=5.0.0"
+            },
+            "suggest": {
+                "ext-bcmath": "Need to support JSON deserialization"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\Protobuf\\": "src/Google/Protobuf",
+                    "GPBMetadata\\Google\\Protobuf\\": "src/GPBMetadata/Google/Protobuf"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "proto library for PHP",
+            "homepage": "https://developers.google.com/protocol-buffers/",
+            "keywords": [
+                "proto"
+            ],
+            "support": {
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v3.22.0"
+            },
+            "time": "2023-02-10T20:00:39+00:00"
+        },
+        {
+            "name": "grpc/grpc",
+            "version": "1.42.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/grpc/grpc-php.git",
+                "reference": "9fa44f104cb92e924d4da547323a97f3d8aca6d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/9fa44f104cb92e924d4da547323a97f3d8aca6d4",
+                "reference": "9fa44f104cb92e924d4da547323a97f3d8aca6d4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "google/auth": "^v1.3.0"
+            },
+            "suggest": {
+                "ext-protobuf": "For better performance, install the protobuf C extension.",
+                "google/protobuf": "To get started using grpc quickly, install the native protobuf library."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Grpc\\": "src/lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "gRPC library for PHP",
+            "homepage": "https://grpc.io",
+            "keywords": [
+                "rpc"
+            ],
+            "support": {
+                "source": "https://github.com/grpc/grpc-php/tree/v1.42.0"
+            },
+            "time": "2021-11-19T08:13:51+00:00"
+        },
+        {
+            "name": "nikolaybrankov/backend-php-client",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "/Users/nikolaybrankov/code/ideas/protected/backend/pckg/php",
+                "reference": "9ee8d739ad9c24e273f3632b3636c628fd32c1ac"
+            },
+            "require": {
+                "ext-grpc": "*",
+                "google/protobuf": "^3.22",
+                "grpc/grpc": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nikolaybrankov\\BackendPhpClient\\": "src",
+                    "Backend\\": "src/grpc/Backend",
+                    "GPBMetadata\\": "src/grpc/GPBMetadata"
+                }
+            },
+            "authors": [
+                {
+                    "name": "nikolaybrankov",
+                    "email": "nikolay.brankov@fortifi.io"
+                }
+            ],
+            "transport-options": {
+                "relative": false
+            }
         },
         {
             "name": "packaged-ui/bem-component",
@@ -4043,12 +4162,14 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nikolaybrankov/backend-php-client": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }

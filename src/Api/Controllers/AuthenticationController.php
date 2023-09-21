@@ -5,6 +5,8 @@ namespace UserApi\Api\Controllers;
 use Exception;
 use Packaged\Http\Responses\JsonResponse;
 use UserApi\Api\Services\AuthenticationService;
+use UserApi\Api\Services\UserService;
+use UserApi\DependencyResolver\DependencyResolver;
 
 class AuthenticationController extends AbstractController
 {
@@ -37,6 +39,14 @@ class AuthenticationController extends AbstractController
     return empty($result)
       ? JsonResponse::create(['error' => 'Wrong credentials!'], 401)
       : JsonResponse::create(['token' => $result]);
+  }
+
+  public function something(UserService $resolver)
+  {
+    $resolver
+      ->getInstance(SomeView::class);
+
+
   }
 
 }

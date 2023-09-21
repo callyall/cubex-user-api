@@ -4,6 +4,7 @@ namespace UserApi\Api\Controllers;
 
 use Cubex\Controller\Controller;
 use Packaged\DiContainer\DependencyInjector;
+use ReflectionClass;
 use UserApi\Context\UserApiContext;
 use UserApi\DependencyResolver\DependencyResolverInterface;
 
@@ -36,7 +37,7 @@ abstract class AbstractController extends Controller
     {
       $handler = $handler(
         ...$resolver
-          ->getDependencyInstances((new \ReflectionClass($handler[0])), $handler[1])
+          ->getDependencyInstances((new ReflectionClass($handler[0])), $handler[1])
       );
     }
 

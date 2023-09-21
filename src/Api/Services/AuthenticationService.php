@@ -4,7 +4,7 @@ namespace UserApi\Api\Services;
 
 use Firebase\JWT\JWT;
 use Packaged\Config\ConfigProviderInterface;
-use UserApi\Forms\LoginForm;
+use UserApi\Api\Forms\LoginForm;
 
 class AuthenticationService implements ServiceInterface
 {

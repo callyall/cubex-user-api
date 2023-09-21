@@ -3,6 +3,8 @@
 namespace UserApi;
 
 use Cubex\Application\Application as CubeXApplication;
+use Grpc\ChannelCredentials;
+use Nikolaybrankov\BackendPhpClient\BackendProvider;
 use Packaged\Config\ConfigProviderInterface;
 use Packaged\Config\Provider\Ini\IniConfigProvider;
 use Packaged\Dal\DalResolver;
@@ -34,9 +36,17 @@ abstract class Application extends CubexApplication
         $confDir . DIRECTORY_SEPARATOR . $ctx->getEnvironment() . DIRECTORY_SEPARATOR . 'datastores.ini',
       ]
     );
-    $resolver = new DalResolver($configProvider, $datastoreConfig);
-    $cubex->share(DalResolver::class, $resolver);
-    $resolver->boot();
+//    $resolver = new DalResolver($configProvider, $datastoreConfig);
+//    $cubex->share(DalResolver::class, $resolver);
+//    $resolver->boot();
+    $backendProvider = new BackendProvider(
+      $configProvider->getSection('backend')->getItem('host'),
+      [
+        'credentials' => ChannelCredentials::createInsecure(),
+      ]
+    );
+
+    $cubex->share(BackendProvider::class, $backendProvider);
     $cubex->share(ConfigProviderInterface::class, $ctx->getConfig());
     $cubex->share(DependencyResolverInterface::class, new DependencyResolver($this->getCubex()), DependencyInjector::MODE_IMMUTABLE);
   }
