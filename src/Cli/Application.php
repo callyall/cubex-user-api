@@ -9,10 +9,7 @@ class Application extends BaseApplication
 {
   public static function launch(Context $ctx)
   {
-    $app = new static($ctx->getCubex());
-    $app->setContext($ctx);
-    $app->_configureConnections();
-    return $app;
+    return new static($ctx->getCubex());
   }
 
 }
