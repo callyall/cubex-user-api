@@ -3,7 +3,11 @@
 namespace UserApi\Api;
 
 use Cubex\Controller\Controller;
+use Exception;
+use Packaged\Context\Context;
 use Packaged\Http\Responses\JsonResponse;
+use Packaged\Routing\Handler\Handler;
+use Protectednet\DependencyResolver\DependencyResolverInterface;
 use UserApi\Api\Controllers\BarController;
 use UserApi\Api\Controllers\HelloController;
 use UserApi\Context\UserApiContext;
@@ -22,8 +26,15 @@ class Router extends Controller
     // Delegates the route to the getFoo method
     yield self::_route('/foo', 'foo');
 
+    yield self::_route('/{name}', 'name');
+
     // Anything else will go to the getDefault method
     return 'default';
+  }
+
+  public function getName(): JsonResponse
+  {
+    return JsonResponse::create(['message' => 'Hello ' . $this->getContext()->routeData()->get('name')]);
   }
 
   public function getFoo(UserApiContext $context): JsonResponse
