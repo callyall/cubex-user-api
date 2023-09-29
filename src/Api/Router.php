@@ -26,6 +26,7 @@ class Router extends Controller
     // Delegates the route to the getFoo method
     yield self::_route('/foo', 'foo');
 
+    // Must be below the above otherwise it will match first
     yield self::_route('/{name}', 'name');
 
     // Anything else will go to the getDefault method
