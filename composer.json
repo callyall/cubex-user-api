@@ -11,7 +11,9 @@
   "require": {
     "php": ">=8.2",
     "ext-json": "*",
-    "cubex/framework": "^4.0"
+    "cubex/framework": "^4.0",
+    "nesbot/carbon": "^2.71",
+    "protectednet/dependency-resolver": "^1.1.0"
   },
   "require-dev": {
     "filp/whoops": "^2.15.2",
@@ -19,13 +21,18 @@
   },
   "autoload": {
     "psr-4": {
-      "UserApi\\": "src/"
+      "UserApi\\": "src/",
+      "UserApi\\Tests\\": "tests/"
     }
   },
   "repositories": [
     {
       "type": "vcs",
       "url": "git@github.com:cubex/framework.git"
+    },
+    {
+      "type": "git",
+      "url": "git@github.com:protectednet/dependency-resolver.git"
     }
   ]
 }
