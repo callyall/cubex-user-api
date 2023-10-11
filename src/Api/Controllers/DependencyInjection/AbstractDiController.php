@@ -30,7 +30,12 @@ abstract class AbstractDiController extends Controller
         /** @var DependencyResolverInterface $dependencyResolver */
         $dependencyResolver = $c->getCubex()->retrieve(DependencyResolverInterface::class);
 
+        /** $handler is a callable array that holds an instance of the controller and a method name */
         $handler = $handler(
+        /**
+         * We pass the class name and the method name to the dependency resolver.
+         * It returns back an array of dependencies that we pass to the method call
+         */
           ...$dependencyResolver
             ->getDependencyInstances(get_class($handler[0]), $handler[1])
         );
