@@ -67,6 +67,12 @@ class Application extends BaseApplication
      * This will execute the factory and return a new instance of TimeServiceInterface.
      */
     $cubex->retrieve(TimeServiceInterface::class, shared: false);
+
+    /**
+     * This will throw an error as there's no factory for TimeService
+     *
+     * $cubex->retrieve(TimeService::class, shared: false);
+     */
   }
 
   protected function _defaultHandler(): Handler
